@@ -250,27 +250,6 @@ std::string RelativeToRootPath(const std::string &project,
   return result;
 }
 
-// Locale-independent code.
-#if defined(FLATBUFFERS_LOCALE_INDEPENDENT) && \
-    (FLATBUFFERS_LOCALE_INDEPENDENT > 0)
-
-// clang-format off
-// Allocate locale instance at startup of application.
-ClassicLocale ClassicLocale::instance_;
-
-#ifdef _MSC_VER
-  ClassicLocale::ClassicLocale()
-    : locale_(_create_locale(LC_ALL, "C")) {}
-  ClassicLocale::~ClassicLocale() { _free_locale(locale_); }
-#else
-  ClassicLocale::ClassicLocale()
-    : locale_(newlocale(LC_ALL, "C", nullptr)) {}
-  ClassicLocale::~ClassicLocale() { freelocale(locale_); }
-#endif
-// clang-format on
-
-#endif  // !FLATBUFFERS_LOCALE_INDEPENDENT
-
 std::string RemoveStringQuotes(const std::string &s) {
   auto ch = *s.c_str();
   return ((s.size() >= 2) && (ch == '\"' || ch == '\'') && (ch == s.back()))

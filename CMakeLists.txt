@@ -75,24 +75,6 @@ if(DEFINED FLATBUFFERS_MAX_PARSING_DEPTH)
   message(STATUS "FLATBUFFERS_MAX_PARSING_DEPTH: ${FLATBUFFERS_MAX_PARSING_DEPTH}")
 endif()
 
-# Auto-detect locale-narrow 'strtod_l' and  'strtoull_l' functions.
-if(NOT DEFINED FLATBUFFERS_LOCALE_INDEPENDENT)
-  include(CheckCXXSymbolExists)
-
-  set(FLATBUFFERS_LOCALE_INDEPENDENT 0)
-  if(MSVC)
-    check_cxx_symbol_exists(_strtof_l stdlib.h FLATBUFFERS_HAS_STRTOF_L)
-    check_cxx_symbol_exists(_strtoui64_l stdlib.h FLATBUFFERS_HAS_STRTOULL_L)
-  else()
-    check_cxx_symbol_exists(strtof_l stdlib.h FLATBUFFERS_HAS_STRTOF_L)
-    check_cxx_symbol_exists(strtoull_l stdlib.h FLATBUFFERS_HAS_STRTOULL_L)
-  endif()
-  if(FLATBUFFERS_HAS_STRTOF_L AND FLATBUFFERS_HAS_STRTOULL_L)
-    set(FLATBUFFERS_LOCALE_INDEPENDENT 1)
-  endif()
-endif()
-add_definitions(-DFLATBUFFERS_LOCALE_INDEPENDENT=$<BOOL:${FLATBUFFERS_LOCALE_INDEPENDENT}>)
-
 set(FlatBuffers_Library_SRCS
   include/flatbuffers/allocator.h
   include/flatbuffers/array.h
